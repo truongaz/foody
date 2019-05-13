@@ -10,6 +10,9 @@ router.post('/regis', valid.checkLogin, valid.regis, r.postRegis);
 
 router.get('/profile/:id', valid.checkLogin, r.getProfile);
 
+router.get('/transfer', r.getTransfers);
+
 router.post('/logout', r.postLogout);
+
 
 module.exports = router;

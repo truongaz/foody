@@ -15,11 +15,17 @@ block body
       label(for='max') Max price
       input.form-control#max(type="number", name="max", placeholder=0, value=0)
     button.btn.btn-info Find
+  form(action="/product/find", method="GET")
+    .form-group
+      label(for='rate') Rate
+      input.form-control#rate(type="number", name="rate", placeholder="Enter rate", min=0, max=5, value=5)    
+    button.btn.btn-info Find
 
   if products
     ul.list-group
       each x in products
         li.list-group-item
           h3.alert-danger #{x.name}
-          p.alert-info #{x.price}
+          p.alert-info Price: #{x.price}
+          p.alert-dark Rate: #{x.rate}
           p.alert-success #{x.info}

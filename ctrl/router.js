@@ -75,16 +75,21 @@ module.exports.getProfile = async function (req, res, next) {
 
 module.exports.findProduct = async function (req, res, next) {
   let name = req.query.name || undefined;
-  let min = req.query.min ? Number(req.query.min) : NaN;
-  let max = req.query.max ? Number(req.query.max) : NaN;
+  let min = req.query.min ? Number(req.query.min) : false;
+  let max = req.query.max ? Number(req.query.max) : false;
+  let rate = req.query.rate ? Number(req.query.rate) : false;
 
   let data;
-  if ((min !== NaN || max !== NaN) && (min !== 0 || max !== 0)) {
+  if ((min != false|| max != false) && (min != 0 || max != 0)) {
     data = await Product.findProductPrice(min, max);
   }
   else if (name) {
     data = await Product.findProducts(name);
   }
+  else if (rate !== false) {
+    data = await Product.findProductRate(rate);
+  }
+
   res.render('product/index', {
     products: data
   });
@@ -118,4 +123,12 @@ module.exports.postLogout = (req, res, next) => {
 module.exports.getProduct = function (req, res, next) {
   res.render('product/index');
   next();
+}
+
+module.exports.getTransfers = async   function (req, res, next) {
+  let id = await Account.getUsernameID(req.cookies.login);
+  let data = await Account.transferred(id);
+  res.render('account/profile', {
+    transfers: data
+  })
 }

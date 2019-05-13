@@ -2,6 +2,7 @@ extends ../index
 block title
   title Profile
 block body
+  a(href='/account/transfer', target='blank') View His of Transfers
   if err
     ul.list-group
       each e in err
@@ -16,3 +17,16 @@ block body
 
   form(action='/account/logout', method='POST')
     button Log out
+
+  if transfers
+    h3 Transfers:
+      each x in transfers
+        h2(style="font-weight: bold;") Transfer id: #{x.id}
+        p Name: #{x.name}
+        ul
+          li.list-group
+            h2.alert-danger Product: #{x.productname}
+            p.alert-info ID: #{x.productid}
+            p.alert-info Price: #{x.price}
+            p.alert-success Info: #{x.info}
+            p.alert-success Date:  #{x.date}
