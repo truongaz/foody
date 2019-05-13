@@ -1,0 +1,20 @@
+extends ../index
+block title
+  title Log in
+block body
+  h1(style="border: 1px solid; text-align: center; margin: 2rem 0;") LOGIN
+  if err
+    ul.list-group
+      each e in err
+        li.list-group-item
+          .alert.alert-danger(role='alert') #{e}
+
+  form(action="/account/login", method="POST")
+    .form-group
+      label(for='name') User name
+      input#name.form-control(name='username', type='text', aria-describedby='emailHelp', placeholder='Enter email')
+      small#emailHelp.form-text.text-muted We&apos;ll never share your email with anyone else.
+    .form-group
+      label(for='pw') Password
+      input#pw.form-control(type='password', name='pw', placeholder='Password')
+    button.btn.btn-primary(type='submit') Log in

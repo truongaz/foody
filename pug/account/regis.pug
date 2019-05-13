@@ -1,0 +1,23 @@
+extends ../index
+block title
+  title Regis
+block body
+  h1(style="border: 1px solid; text-align: center; margin: 2rem 0;") LOG UP
+  if err
+    ul.list-group
+      each e in err
+        li.list-group-item
+          .alert.alert-danger(role='alert') #{e}
+
+  form(action="/account/regis", method="POST")
+    .form-group
+      label(for='username') User name
+      input#username.form-control(name='username', type='text', aria-describedby='emailHelp', placeholder='User name')
+      small#emailHelp.form-text.text-muted We&apos;ll never share your email with anyone else.
+    .form-group
+      label(for='pw') Password
+      input#pw.form-control(type='password', name='pw', placeholder='Password')
+    .form-group
+      label(for='pw1') Retype Password
+      input#pw1.form-control(name='pw1' type='password', placeholder='Retype Password')
+    button.btn.btn-primary(type='submit') Sign up

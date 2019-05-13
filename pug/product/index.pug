@@ -1,0 +1,25 @@
+extends ../index
+block title
+  title Product
+block body
+  h1(style="border: 1px solid; text-align: center; margin: 2rem 0;") WELCOME PRODUCT
+
+  form(action="/product/find", method="GET")
+    .form-group
+      label(for='name') Name
+      input.form-control#name(type="text", name="name", placeholder="Enter name")
+    .form-group
+      label(for='min') Min price
+      input.form-control#min(type="number", name="min", placeholder=0, value=0)
+    .form-group
+      label(for='max') Max price
+      input.form-control#max(type="number", name="max", placeholder=0, value=0)
+    button.btn.btn-info Find
+
+  if products
+    ul.list-group
+      each x in products
+        li.list-group-item
+          h3.alert-danger #{x.name}
+          p.alert-info #{x.price}
+          p.alert-success #{x.info}

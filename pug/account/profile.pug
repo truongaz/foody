@@ -1,0 +1,18 @@
+extends ../index
+block title
+  title Profile
+block body
+  if err
+    ul.list-group
+      each e in err
+        li.list-group-item
+          .alert.alert-danger(role='alert') #{e}
+  if account
+    ul.list-group
+      li.alert.alert-success ID: #{account.id}
+      li.alert.alert-info Username: #{account.username}
+      li.alert.alert-info Account type: #{account.type}
+      li.alert.alert-warning Password (hashed): #{account.pw}
+
+  form(action='/account/logout', method='POST')
+    button Log out
