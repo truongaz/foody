@@ -137,6 +137,46 @@ class Account {
       });
     });
   }
+
+  static getUsernameID(username) {
+    let sql = `select id from account where username ='${username}'`;
+    return new Promise(function (reso, rej) {
+      conn.query(sql, function (err, data) {
+        if (err) return rej(false);
+        if (data.length)
+          return reso(data[0].id);
+        return reso(false);
+      });
+    });
+  }
+
+  static transferred(id) {
+    let sql = 
+    `select buy.id, 
+    product.id as productid, 
+    product.name as productname,
+    product.price, product.info,
+    buy.date, account.username as name 
+    from product 
+    join buy 
+      on product.id=buy.product
+    join account 
+     on account.id=buy.user
+    where account.id='${id}'`;
+    return new Promise(function (reso, rej) {
+      conn.query(sql, function(err, data) {
+        if(err) return rej(err);
+        if(data && data.length) {
+          return reso(data);
+        }
+        return reso(false);
+      });
+    });
+  }
 }
+
+// Account.transferred('01')
+// .then((x)=> console.log(x))
+// .catch((e) => console.log(e));
 
 module.exports = Account;

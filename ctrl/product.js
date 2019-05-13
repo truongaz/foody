@@ -19,6 +19,7 @@ class Product {
       '${product.info}',
       '${product.type}'
     )`;
+    console.log(sql);
 
     return new Promise((reso, rej) => {
       conn.query(sql, function (err, data) {
@@ -52,6 +53,24 @@ class Product {
         return reso(false);
       });
     });
+  }
+
+  static findProductRate(rate) {
+    rate = Math.floor(rate);
+    let sql = 
+    `SELECT * 
+    FROM product join rate 
+    on product.id=rate.product 
+    where floor(rate.rate) = ${rate}`;
+    return new Promise(function (reso, rej) {
+      conn.query(sql, function (err, data) {
+        if (err) return rej(err);
+        if(data && data.length)
+          return reso(data);
+        return reso(false);
+      });
+    });
+
   }
 }
 
