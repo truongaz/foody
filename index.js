@@ -9,7 +9,10 @@ var cookieParser = require('cookie-parser');
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 app.use(cookieParser());
-    
+
+// ./public include static files that public on clients
+//        URL                       file path
+app.use('/public', express.static('./public'));    
 var route = require('./route/all');
 
 app.set('views', './pug');

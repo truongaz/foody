@@ -70,7 +70,11 @@ class Product {
         return reso(false);
       });
     });
+  }
 
+  static getNutri(id) {
+    let sql = `select * from product p join nutrition n
+    on p.id=n.product where `;
   }
 }
 

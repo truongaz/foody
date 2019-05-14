@@ -1,4 +1,5 @@
 const md5 = require('md5');
+var Account = require('./ctrl/acccount');
 
 function escapeHtml(unsafe) {
   return unsafe
@@ -78,6 +79,20 @@ module.exports.checkLogin = function (req, res, next) {
     res.redirect('/account/login');
   }
   if(req.cookies.login) {
+    next();
+  }
+}
+
+module.exports.checkManager = async function (req, res, next) {
+  let account = await Account.getFromUsername(req.cookies.login);
+  if(account.type != 'admin') {
+    let err = ['Permission denied.'];
+    res.render('account/profile', {
+      err: err
+    });
+    err = [];
+  }
+  else {
     next();
   }
 }

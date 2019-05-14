@@ -150,9 +150,33 @@ class Account {
     });
   }
 
+  static getFromUsername(username) {
+    let sql = `select * from account where username='${username}'`;
+    return new Promise(function (reso, rej) {
+      conn.query(sql, function (err, data) {
+        if (err) return rej(err);
+        if (data && data.length)
+          return reso(data[0]);
+        return reso(false);
+      });
+    });
+  }
+
+  static listUsers() {
+    let sql = `select * from account where type='user'`;
+    return new Promise(function (reso, rej) {
+      conn.query(sql, function (err, data) {
+        if (err) return rej(err);
+        if (data && data.length)
+          return reso(data);
+        return reso(false);
+      });
+    });
+  }
+
   static transferred(id) {
-    let sql = 
-    `select buy.id, 
+    let sql =
+      `select buy.id, 
     product.id as productid, 
     product.name as productname,
     product.price, product.info,
@@ -164,12 +188,88 @@ class Account {
      on account.id=buy.user
     where account.id='${id}'`;
     return new Promise(function (reso, rej) {
-      conn.query(sql, function(err, data) {
-        if(err) return rej(err);
-        if(data && data.length) {
+      conn.query(sql, function (err, data) {
+        if (err) return rej(err);
+        if (data && data.length) {
           return reso(data);
         }
         return reso(false);
+      });
+    });
+  }
+
+  static async writeLog(id, username) {
+    if (id !== undefined) {
+      await Account.writeNewLog(id, username);
+      let q =
+        `UPDATE accesslog set count = count+1 
+        where user='${id}'`;
+      return new Promise(function (reso, rej) {
+        conn.query(q, function (err) {
+          if (err) return rej(err);
+          return reso(true);
+        });
+      });
+    }
+    else {
+      await Account.writeNewLog(id, username);
+      let id = await Account.getUsernameID(username);
+      let q =
+        `UPDATE accesslog set count = count+1 
+      where user='${id}'`;
+      return new Promise(function (reso, rej) {
+        conn.query(q, function (err) {
+          if (err) return rej(err);
+          return reso(true);
+        });
+      });
+    }
+    return false;
+  }
+
+  static async writeNewLog(id, username) {
+    if (id !== undefined) {
+      let q = `INSERT ignore INTO accesslog(user, count) VALUES('${id}', 0)`;
+      return new Promise(function (reso, rej) {
+        conn.query(q, function (err, data) {
+          if (err) return rej(err);
+          return reso(true);
+        });
+      });
+    }
+    else {
+      let id = await Account.getUsernameID(username);
+      let q = `INSERT ignore INTO accesslog(user, count) VALUES('${id}', 0)`;
+      return new Promise(function (reso, rej) {
+        conn.query(q, function (err, data) {
+          if (err) return rej(err);
+          return reso(true);
+        });
+      });
+    }
+    return false;
+  }
+
+  static async statisticalAccess() {
+    let q =
+      `select account.id as id, account.username as name, account.type, count, last
+      from account join accesslog on account.id=accesslog.user;      `;
+    return new Promise(function (reso, rej) {
+      conn.query(q, function (err, data) {
+        if(err) return rej(err);
+        if(data && data.length)
+          return reso(data);
+      });
+    });
+  }
+
+  static async vote(user, product, rate) {
+    let q = 
+    `insert ignore into rate values ('${user}', '${product}', ${rate})`;
+    return new Promise(function (reso, rej) {
+      conn.query(q, function(err) {
+        if(err) return rej(err);
+        return reso(true);
       });
     });
   }

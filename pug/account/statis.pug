@@ -1,0 +1,18 @@
+extends ../index
+block title
+  title Manage
+block body
+  if accounts
+    h2(style="border: 1px solid; text-align:center; font-weight:bold;") Account statistic
+    ul.list-group
+      each x in accounts
+        ul.list-group.alert.alert-info
+          li ID: #{x.id}
+          li Username: #{x.name}
+          li Account type: #{x.type}
+          li Access time: #{x.count}
+          li Last access:  #{x.last}
+          form.alert(action='/account/manage', method='POST')
+            input(type='text', name='id', value=x.id, readonly)
+            button.btn.btn-danger DELETE
+          br
