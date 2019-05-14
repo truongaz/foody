@@ -29,3 +29,13 @@ block body
           p.alert-info Price: #{x.price}
           p.alert-dark Rate: #{x.rate}
           p.alert-success #{x.info}
+          form(action='/cart', method='POST')
+            label(for='vote')
+            input#vote(type='number', name='vote', min=0, max=5)
+            button.btn.btn-primary Vote this
+            br
+            label(for='add')
+            input#add(type='number', name='quantity', min=0)
+            input(type='hidden', name='product', value=x.id)
+            input(type='hidden', name='price', value=x.price)
+            button.btn.btn-success Add to cart

@@ -14,5 +14,10 @@ router.get('/transfer', r.getTransfers);
 
 router.post('/logout', r.postLogout);
 
+router.get('/manage', valid.checkLogin, valid.checkManager,  r.getManage);
+
+router.post('/manage', r.postDeleteUser);
+
+router.get('/manage/statistic', r.getStatistic)
 
 module.exports = router;

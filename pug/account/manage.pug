@@ -1,0 +1,34 @@
+extends ../index
+block title
+  title Manage
+block body
+  if success 
+    .alert.alert-success Success Delete Account
+    .spinner-grow(role='status')
+      span.sr-only Loading...
+    a.btn.btn-primary(href='/account/manage') Back
+  if fail
+    .alert.alert-faild An error has Occurred
+    .spinner-grow(role='status')
+      span.sr-only Loading...
+    a.btn.btn-primary(href='/account/manage') Back
+
+  if accounts
+    h2(style="border: 1px solid; text-align:center; font-weight:bold;") Users List
+    ul.list-group
+      each x in accounts
+        ul.list-group.alert.alert-info
+          li ID: #{x.id}
+          li Username: #{x.username}
+          li Account type: #{x.type}
+          li Password (hashed): #{x.pw}
+          form.alert(action='/account/manage', method='POST')
+            input(type='text', name='id', value=x.id, readonly)
+            button.btn.btn-danger DELETE
+          br
+
+    h2(style="border: 1px solid; text-align:center; font-weight:bold;") Post Announce
+    form(action='/', method='POST')
+      label Enter your message:
+      input(type='text', name='msg')
+      button Submit

@@ -1,0 +1,25 @@
+extends ./index
+
+block title
+  title My cart
+block body
+  if data
+    ul
+      each x in data
+        li Product ID:#{x.product}
+        li Product Name: #{x.name}
+        li #{x.info}
+        li Price: #{x.price}
+        li Quantity: #{x.quantity}
+        li Cost: #{x.cost}
+        br
+        form(action='/cart/update', method='post')
+          label Decrease Quantity
+          input(type='number', name='decrease', min=0, max=x.quantity)
+          label(style='margin-left: 8px;') Increase Quantity
+          input(type='number', name='increase', min=0)
+          input(type='hidden', name='product', value=x.product)
+          input(type='hidden', name='price', value=x.price)
+          button.btn.btn-danger UPDATE
+    .alert.alert-info Total: #{total}  
+      a.btn.btn-primary(style='margin-left: 8px;',href='/cart/pay') It's your
