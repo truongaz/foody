@@ -42,12 +42,14 @@ class Cart {
     });
   }
 
-  static getCart(username) {
+  static async getCart(username) {
+    let id= await Account.getUsernameID(username);
     let q =
       `select * from cart c join product p
     on c.product=p.id
     join account a
-    on c.user=a.id`;
+    on c.user=a.id
+    where user='${id}'`;
 
     return new Promise(function (reso, rej) {
       conn.query(q, function (err, data) {

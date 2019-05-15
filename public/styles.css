@@ -1,0 +1,48 @@
+#wrapper {
+    background: #ccc;
+    overflow: hidden;
+    transition: height 200ms;
+}
+
+li {
+    list-style-type: none;
+}
+
+.frame {
+    border: 0 solid;
+    padding-bottom: 2rem;
+    margin-bottom: 4rem;
+    background: rgb(2, 0, 36);
+    background: linear-gradient(0deg, rgba(224, 224, 224, 1) 0%, rgba(255, 255, 255, 1) 48%);
+}
+
+.zoom span{
+    font-size: 1.3em;
+}
+
+.zoom span {
+    animation-name: example;
+    animation-timing-function: linear;
+    animation-duration: 1.5s;
+    animation-timing-function: cubic-bezier();
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+
+@keyframes example {
+    from {color: inherit;}
+    to {color: blue;}
+  }
+
+#list {
+    background-color: #888;
+    position: relative;
+    list-style-type: none;
+}
+
+#list li {
+    margin-left: 2rem;
+    color: white;
+    text-transform: capitalize;
+    font-weight: bold;
+}

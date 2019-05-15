@@ -1,13 +1,14 @@
 html 
   head
     link(rel='stylesheet', href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css', integrity='sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T', crossorigin='anonymous')
+    link(rel='stylesheet', href='/public/styles.css')
     block title
     block js
+    script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js')
   body
     marquee(style='cursor:none;')
       h4#announce 
     script.
-        // script.js
         document.getElementById('announce').textContent='#{msg}';
     nav.navbar.navbar-expand-lg.navbar-light.bg-light
       a.navbar-brand(href='#') Navbar
@@ -35,15 +36,16 @@ html
           input.form-control.mr-sm-2(type='search', placeholder='Search', aria-label='Search')
         button.btn.btn-outline-success.my-2.my-sm-0(type='submit') Search
 
-    form.alert-dark(action='/contact', method='POST' style="padding: 0;")
-      p(style="margin:0 3px;") Numberphone       
-        input(type='radio', name='type', value='numberphone') 
-      p(style="margin:0 3px;")  Fax
-        input(type='radio', name='type', value='fax') 
-      p(style="margin:0 3px;") Email
-        input(type='radio', name='type', value='email') 
-      p(style="margin:0 3px;") Address      
-        input(type='radio', name='type', value='address') 
-      button.form.btn.btn-primary Contact Me
+    #contact
+      form.contact.alert-dark(action='/contact', method='POST' style="padding: 0;")
+        p(style="margin:0 3px;") Numberphone       
+          input(type='radio', name='type', value='numberphone') 
+        p(style="margin:0 3px;")  Fax
+          input(type='radio', name='type', value='fax') 
+        p(style="margin:0 3px;") Email
+          input(type='radio', name='type', value='email') 
+        p(style="margin:0 3px;") Address      
+          input(type='radio', name='type', value='address') 
+        button.form.btn.btn-primary Contact Me
     script(type='text/javascript', src='/public/announce.js')    
   block body

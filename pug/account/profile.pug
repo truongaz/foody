@@ -19,14 +19,18 @@ block body
     button Log out
 
   if transfers
-    h3 Transfers:
+    h3.zoom.alert.alert-danger(style="font-weight: bold;") Total Transferred: 
+      span #{totalcost}
       each x in transfers
         h2(style="font-weight: bold;") Transfer id: #{x.id}
-        p Name: #{x.name}
         ul
           li.list-group
-            h2.alert-danger Product: #{x.productname}
-            p.alert-info ID: #{x.productid}
-            p.alert-info Price: #{x.price}
-            p.alert-success Info: #{x.info}
+            h2.alert-danger ID: #{x.id}
+            h3.alert-dark User: #{x.name}
             p.alert-success Date:  #{x.date}
+            p.alert-info Money: #{x.money}
+        form(action='/cart/pay', method='POST')
+          input(type='hidden', value=x.id, name='clearTransfer')
+          button.btn.btn-danger Clear History
+        br
+        br

@@ -8,7 +8,7 @@ var r = require('../ctrl/router');
 
 
 router.get('/', (req, res, next) => {
-  res.render('index');
+    res.render('index');
 });
 
 router.use('/account', account);
@@ -20,9 +20,8 @@ router.post('/', valid.checkLogin, valid.checkManager, r.announce)
 
 router.get('/cart', valid.checkLogin, r.getCart);
 router.post('/cart', valid.checkLogin, r.addCart);
-router.get('/cart/pay', (req, res) => {
-  res.send('<h1>Transferred <br> <a href="/cart">Back</a></h1>');
-});
+router.get('/cart/pay', valid.checkLogin, r.deal);
+router.post('/cart/pay', valid.checkLogin, r.postDeal);
 
 // router.get('/cart', valid.checkLogin, r.getCart);
 router.post('/cart/update', valid.checkLogin, r.updateQuantity);

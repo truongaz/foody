@@ -22,20 +22,32 @@ block body
     button.btn.btn-info Find
 
   if products
-    ul.list-group
-      each x in products
-        li.list-group-item
-          h3.alert-danger #{x.name}
-          p.alert-info Price: #{x.price}
-          p.alert-dark Rate: #{x.rate}
-          p.alert-success #{x.info}
-          form(action='/cart', method='POST')
-            label(for='vote')
-            input#vote(type='number', name='vote', min=0, max=5)
-            button.btn.btn-primary Vote this
-            br
-            label(for='add')
-            input#add(type='number', name='quantity', min=0)
-            input(type='hidden', name='product', value=x.id)
-            input(type='hidden', name='price', value=x.price)
-            button.btn.btn-success Add to cart
+    br
+    br
+    each x in products
+      .frame
+        li
+          h2.alert.alert-danger #{x.name}
+          p.alert.alert-info Price: #{x.price}
+          if x.rate
+            p.alert.alert-dark Rate: #{x.rate}
+            
+        button#button.btn.btn-danger Nutri
+        #wrapper
+          #list
+            each val, key in x.nutri
+              li #{key} : #{val}
+        br
+        p.alert.alert-success #{x.info}
+        form(action='/cart', method='POST')
+          label(for='vote')
+          input#vote(type='number', name='vote', min=0, max=5)
+          button.btn.btn-primary Vote this
+          br
+          label(for='add')
+          input#add(type='number', name='quantity', min=0)
+          input(type='hidden', name='product', value=x.id)
+          input(type='hidden', name='price', value=x.price)
+          button.btn.btn-success Add to cart
+      br
+      br

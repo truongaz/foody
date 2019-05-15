@@ -11,15 +11,14 @@ class Product {
   }
 
   static saveProduct(product) {
-    let sql = 
-    `insert into product values (
+    let sql =
+      `insert into product values (
       '${product.id}',
       '${product.name}',
       ${product.price},
       '${product.info}',
       '${product.type}'
     )`;
-    console.log(sql);
 
     return new Promise((reso, rej) => {
       conn.query(sql, function (err, data) {
@@ -57,15 +56,15 @@ class Product {
 
   static findProductRate(rate) {
     rate = Math.floor(rate);
-    let sql = 
-    `SELECT * 
+    let sql =
+      `SELECT * 
     FROM product join rate 
     on product.id=rate.product 
     where floor(rate.rate) = ${rate}`;
     return new Promise(function (reso, rej) {
       conn.query(sql, function (err, data) {
         if (err) return rej(err);
-        if(data && data.length)
+        if (data && data.length)
           return reso(data);
         return reso(false);
       });
@@ -76,6 +75,45 @@ class Product {
     let sql = `select * from product p join nutrition n
     on p.id=n.product where `;
   }
+
+  static getVote(user, product) {
+    let q = `select user, productid, vote
+    from vote v join account a on v.user=a.id
+    join product p on v.product=p.id
+    where user='${user}' and product='${product}'`;
+
+    return new Promise(function (reso, rej) {
+      conn.query(q, function (err, data) {
+        if (err) return rej(err);
+        if (data && data.length) {
+          return reso(data);
+        }
+        return reso(false);
+      })
+    });
+  }
+
+  static getProducts() {
+    return new Promise((reso, rej) => {
+      conn.query(`select * from product`, (err, data) => {
+        if (err) return rej(err);
+        return reso(data);
+      });
+    });
+  }
+
+  static getNutri(product) {
+    let q = `select * from nutri where product= '${product}'`;
+    return new Promise(function (reso, rej) {
+      conn.query(q, function (err, data) {
+        if (err) return rej(err);
+        if (data && data.length) {
+          return reso(data[0]);
+        }
+        return reso(false);
+      })
+    });
+  }
 }
 
 module.exports = Product;
@@ -84,5 +122,9 @@ module.exports = Product;
 // .then((data) => console.log(data));
 
 // Product.saveProduct({ id: "xx", name: "xx", price: 1, info: "i dont know", type: "02" })
+//   .then((data) => console.log(data))
+//   .catch((err) => console.log(err));
+
+// Product.getNutri('01')
 //   .then((data) => console.log(data))
 //   .catch((err) => console.log(err));
