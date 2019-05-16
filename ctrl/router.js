@@ -1,4 +1,3 @@
-const router = require('express').Router();
 const shortid = require('shortid');
 const Account = require('./acccount');
 const Product = require('./product');
@@ -6,13 +5,14 @@ const Manager = require('./manager');
 const Cart = require('./cart');
 const Vote = require('./vote');
 const PayLog = require('./paylog');
+const Partner = require('./partner');
 
-module.exports.getRegis = function(req, res, next) {
+module.exports.getRegis = function (req, res, next) {
     res.render('account/regis');
     next();
 }
 
-module.exports.postRegis = async function(req, res, next) {
+module.exports.postRegis = async function (req, res, next) {
     let account;
     account = new Account(shortid.generate(), req.body.username, req.body.pw);
     let check = await Account.checkUsername(account.username);
@@ -38,12 +38,12 @@ module.exports.postRegis = async function(req, res, next) {
     }
 }
 
-module.exports.getLogin = function(req, res, next) {
+module.exports.getLogin = function (req, res, next) {
     res.render('account/login');
     next();
 }
 
-module.exports.postLogin = async function(req, res, next) {
+module.exports.postLogin = async function (req, res, next) {
     let account = {
         username: req.body.username,
         pw: req.body.pw
@@ -64,21 +64,31 @@ module.exports.postLogin = async function(req, res, next) {
     }
 }
 
-module.exports.getProfile = async function(req, res, next) {
+module.exports.getProfile = async function (req, res, next) {
     let account = {
         id: req.params.id
     }
     account = await Account.getAccount(account.id);
+    let msg = await Account.getHeath(account.id);
+    msg = msg[0];
+    if (msg['THIN']) {
+        msg = 'Should eat more meat';
+    }
+    else if (msg['Fat']) {
+        msg = 'Should eat less than';
+    }
+    else msg = 'Perfect ';
     if (account) {
         res.render('account/profile', {
-            account: account
+            account: account,
+            msg: msg
         });
     } else {
         res.send('Account Profile is not avaiable.');
     }
 }
 
-module.exports.findProduct = async function(req, res, next) {
+module.exports.findProduct = async function (req, res, next) {
     let name = req.query.name || undefined;
     let min = req.query.min ? Number(req.query.min) : false;
     let max = req.query.max ? Number(req.query.max) : false;
@@ -99,7 +109,7 @@ module.exports.findProduct = async function(req, res, next) {
     next();
 }
 
-module.exports.postContact = function(req, res, next) {
+module.exports.postContact = function (req, res, next) {
     let typeContact = req.body.type;
     switch (typeContact) {
         case ('numberphone'):
@@ -124,7 +134,7 @@ module.exports.postLogout = (req, res, next) => {
     res.redirect('/account/login');
 }
 
-module.exports.getProduct = async function(req, res, next) {
+module.exports.getProduct = async function (req, res, next) {
     let products = await Product.getProducts();
     let user = await Account.getUsernameID(req.cookies.login);
     for (x of products) {
@@ -138,11 +148,11 @@ module.exports.getProduct = async function(req, res, next) {
     next();
 }
 
-module.exports.getTransfers = async function(req, res, next) {
+module.exports.getTransfers = async function (req, res, next) {
     let id = await Account.getUsernameID(req.cookies.login);
     let type = await Account.getType(id);
     type = type.type;
-    let total=0;
+    let total = 0;
     let data;
     if (type == 'admin') {
         data = await Account.transferred();
@@ -157,7 +167,7 @@ module.exports.getTransfers = async function(req, res, next) {
     })
 }
 
-module.exports.deal = async function(req, res, next) {
+module.exports.deal = async function (req, res, next) {
     let id = await Account.getUsernameID(req.cookies.login);
     let data = await Account.deal(id);
     res.render('account/profile', {
@@ -165,7 +175,7 @@ module.exports.deal = async function(req, res, next) {
     });
 }
 
-module.exports.postDeal = async function(req, res, next) {
+module.exports.postDeal = async function (req, res, next) {
     let id = await Account.getUsernameID(req.cookies.login);
     let clearTransfer;
     req.body.clearTransfer ? clearTransfer = req.body.clearTransfer : clearTransfer = undefined;
@@ -175,7 +185,7 @@ module.exports.postDeal = async function(req, res, next) {
     res.redirect('/account/transfer');
 }
 
-module.exports.getManage = async function(req, res, next) {
+module.exports.getManage = async function (req, res, next) {
     let data = await Account.listUsers();
     res.render('account/manage', {
         accounts: data
@@ -183,7 +193,7 @@ module.exports.getManage = async function(req, res, next) {
 }
 
 
-module.exports.postDeleteUser = async function(req, res, next) {
+module.exports.postDeleteUser = async function (req, res, next) {
     let id = req.body.id;
     let status = [];
     if (id) {
@@ -205,7 +215,7 @@ module.exports.postDeleteUser = async function(req, res, next) {
     }
 }
 
-module.exports.getStatistic = async function(req, res, next) {
+module.exports.getStatistic = async function (req, res, next) {
     let data = await Account.statisticalAccess();
     res.render('account/statis', {
         accounts: data
@@ -213,7 +223,7 @@ module.exports.getStatistic = async function(req, res, next) {
 }
 
 // limitTime: yyyy-mm-dd 0h0m
-module.exports.announce = function(req, res, next) {
+module.exports.announce = function (req, res, next) {
     let msg = req.body.msg;
     res.render('index', {
         msg: msg,
@@ -228,7 +238,7 @@ function sum(data) {
     return sum;
 }
 
-module.exports.getCart = async function(req, res, next) {
+module.exports.getCart = async function (req, res, next) {
     let id = await Account.getUsernameID(req.cookies.login);
     let sql =
         `select * from cart where user= '${id}'`;
@@ -244,7 +254,7 @@ module.exports.getCart = async function(req, res, next) {
     });
 }
 
-module.exports.addCart = async function(req, res, next) {
+module.exports.addCart = async function (req, res, next) {
     let user = await Account.getUsernameID(req.cookies.login);
     let product = req.body.product;
     let price = req.body.price;
@@ -267,7 +277,7 @@ module.exports.addCart = async function(req, res, next) {
     }
 }
 
-module.exports.updateQuantity = async function(req, res, next) {
+module.exports.updateQuantity = async function (req, res, next) {
     let user = await Account.getUsernameID(req.cookies.login);
     let product = req.body.product;
     let price = req.body.price;
@@ -288,4 +298,61 @@ module.exports.updateQuantity = async function(req, res, next) {
             res.redirect('/cart');
         }
     }
+}
+
+module.exports.addMenu = async function (req, res, next) {
+    let user = await Account.getUsernameID(req.cookies.login);
+    await Product.makeMenu(user, req.body.joinproduct);
+    res.redirect('/account/menu');
+}
+
+module.exports.getMenu = async function (req, res, next) {
+    let user = await Account.getUsernameID(req.cookies.login);
+    let data = await Product.getMenu(user);
+    let nutri = {
+        carb: 0,
+        fat: 0,
+        protein: 0,
+        calo: 0
+    }
+
+    data.map((x) => {
+        for (y in x)
+            if (y in nutri) {
+                nutri[y] += x[y];
+            }
+    });
+
+    let msg = [];
+    for (key in nutri) {
+        console.log(key, nutri[key])
+        if (nutri[key] < 1 && key != 'calo')
+            msg.push('Should add ' + key);
+    }
+
+
+    // msg = msg.reduce((val, idx) {
+    //     if (nutri[val] < max) {
+    //         return new String('Should add more ' + val);
+    //     }
+    // });
+    res.render('account/menu', {
+        data: data,
+        msg: msg,
+        info: nutri
+    });
+}
+
+module.exports.getPartner = async (req, res, next) => {
+    let partner = await Account.getUsernameID(req.cookies.login);
+    let data = await Partner.getTotalBuy(partner);
+    if (data == false) {
+        res.render('partner/index');
+        return;
+    }
+    let total = data.pop();
+    res.render('partner/index', {
+        data: data,
+        total: total.total
+    });
 }

@@ -71,11 +71,6 @@ class Product {
     });
   }
 
-  static getNutri(id) {
-    let sql = `select * from product p join nutrition n
-    on p.id=n.product where `;
-  }
-
   static getVote(user, product) {
     let q = `select user, productid, vote
     from vote v join account a on v.user=a.id
@@ -109,6 +104,35 @@ class Product {
         if (err) return rej(err);
         if (data && data.length) {
           return reso(data[0]);
+        }
+        return reso(false);
+      })
+    });
+  }
+
+  static makeMenu(user, product) {
+    let q = `insert ignore into menu values (
+      '${user}',
+      '${product}'
+    )`
+    return new Promise(function (reso, rej) {
+      conn.query(q, function (err, data) {
+        if (err) return rej(err);
+        return reso(true);
+      })
+    });
+  }
+
+  static getMenu(user) {
+    let q=`select * from menu m left join product p on m.product=p.id
+    left join nutri n on n.product=m.product
+    left join type t on p.type=t.id
+    where user='${user}'`;
+    return new Promise(function (reso, rej) {
+      conn.query(q, function (err, data) {
+        if (err) return rej(err);
+        if (data && data.length) {
+          return reso(data);
         }
         return reso(false);
       })

@@ -1,0 +1,25 @@
+extends ../index
+block title
+  title menu
+block body
+  if data
+      each x in data
+        span Product: #{x.product}
+        span
+          button.btn.btn-primary(type='button', data-toggle='collapse', data-target='#'+x.name+x.product, aria-expanded='false', aria-controls=x.product)
+            | Show
+        .collapse(id=x.name+x.product)
+          .card.card-body
+            each val, i in x
+                  li.capitalize #{i} : #{val}
+        br
+        br
+  
+  if msg
+    each x in msg
+        p.alert.alert-primary #{x}
+
+  if info
+    h2.frame Total
+      each x,i in info
+        p.small #{i}: #{x}

@@ -32,11 +32,12 @@ block body
           if x.rate
             p.alert.alert-dark Rate: #{x.rate}
             
-        button#button.btn.btn-danger Nutri
-        #wrapper
-          #list
-            each val, key in x.nutri
-              li #{key} : #{val}
+        if x.nutri
+          button#button.btn.btn-danger Nutri
+          #wrapper
+            #list
+              each val, key in x.nutri
+                li #{key} : #{val}
         br
         p.alert.alert-success #{x.info}
         form(action='/cart', method='POST')
@@ -49,5 +50,8 @@ block body
           input(type='hidden', name='product', value=x.id)
           input(type='hidden', name='price', value=x.price)
           button.btn.btn-success Add to cart
+        form(action='/account/menu', method='POST')
+          input(type='hidden', name='joinproduct', value=x.id)
+          button.btn.btn-primary Join Menu
       br
       br

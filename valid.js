@@ -96,3 +96,17 @@ module.exports.checkManager = async function (req, res, next) {
     next();
   }
 }
+
+module.exports.checkPartner = async function (req, res, next) {
+  let account = await Account.getFromUsername(req.cookies.login);
+  if(account.type != 'partner') {
+    let err = ['Permission denied.'];
+    res.render('account/profile', {
+      err: err
+    });
+    err = [];
+  }
+  else {
+    next();
+  }
+}

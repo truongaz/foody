@@ -22,7 +22,7 @@ router.get('/cart', valid.checkLogin, r.getCart);
 router.post('/cart', valid.checkLogin, r.addCart);
 router.get('/cart/pay', valid.checkLogin, r.deal);
 router.post('/cart/pay', valid.checkLogin, r.postDeal);
-
+router.get('/partner', valid.checkLogin, valid.checkPartner, r.getPartner)
 // router.get('/cart', valid.checkLogin, r.getCart);
 router.post('/cart/update', valid.checkLogin, r.updateQuantity);
 

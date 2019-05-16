@@ -304,6 +304,31 @@ class Account {
             });
         });
     }
+
+    static getProfile(id) {
+        let q = `select * from account a join profile p on a.id=p.account
+        where account='${id}'`;
+        return new Promise(function (reso, rej) {
+            conn.query(q, function (err) {
+                if (err) return rej(err);
+                if (data && data.length)
+                    return reso(data[0]);
+                return reso(false);
+            });
+        });
+    }
+
+    static getHeath(id) {
+        let q = `call getHeath('${id}')`;
+        return new Promise(function (reso, rej) {
+            conn.query(q, function (err, data) {
+                if (err) return rej(err);
+                if (data && data.length)
+                    return reso(data[0]);
+                return reso(false);
+            });
+        });
+    }
 }
 
 // Account.transferred('01')
